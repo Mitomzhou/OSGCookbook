@@ -42,15 +42,15 @@ osg::Node* createWall()
 
 osg::MatrixTransform* createDoor()
 {
-	osg::ref_ptr<osg::ShapeDrawable> doorShape =
-		new osg::ShapeDrawable(new osg::Box(osg::Vec3(2.5f,
-			0.0f, 0.0f), 6.0f, 0.2f, 10.0f));
+	osg::ref_ptr<osg::ShapeDrawable> doorShape = new osg::ShapeDrawable(new osg::Box(osg::Vec3(2.5f, 0.0f, 0.0f), 6.0f, 0.2f, 10.0f));
 	doorShape->setColor(osg::Vec4(1.0f, 1.0f, 0.8f, 1.0f));
+
 	osg::ref_ptr<osg::Geode> geode = new osg::Geode;
 	geode->addDrawable(doorShape.get());
-	osg::ref_ptr<osg::MatrixTransform> trans =
-		new osg::MatrixTransform;
+
+	osg::ref_ptr<osg::MatrixTransform> trans = new osg::MatrixTransform;
 	trans->addChild(geode.get());
+
 	return trans.release();
 }
 

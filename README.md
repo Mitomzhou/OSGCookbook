@@ -42,3 +42,13 @@
 * OSGCh04Ex09 设计二维的相机操作器
 
 [第5章详细内容 - 动画](/OSGCh05/README.md)
+* OSGCh05Ex01 用 osgAnimation 库实现开关门动画
+* OSGCh05Ex02 在三维场景中播放视频
+* OSGCh05Ex03 滚动的文字, 通过Ease Motion实现
+* OSGCh05Ex04 变形几何体(osgAnimation::MorphGeometry)
+* OSGCh05Ex05 实现物体的淡出淡入
+* OSGCh05Ex06 模拟飞行器着火的效果
+* OSGCh05Ex07 使用着色器实现光照
+* OSGCh05Ex08 创建一个战机游戏
+* OSGCh05Ex09 创建一个骨骼动画
+* OSGCh05Ex10 给骨骼蒙皮
