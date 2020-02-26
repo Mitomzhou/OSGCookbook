@@ -101,8 +101,9 @@ int main(int argc, char** argv)
 	osg::ref_ptr<osgAnimation::Skeleton> skelroot = new osgAnimation::Skeleton;
 	skelroot->setDefaultUpdateCallback();
 
+	// bone 0 是根骨头 不动
 	osgAnimation::Bone* bone0 = createBone("bone0", osg::Vec3(0.0f, 0.0f, 0.0f), skelroot.get());
-	
+	// 骨头动画主要是指一头有旋转
 	osgAnimation::Bone* bone11 = createBone("bone11", osg::Vec3(0.5f, 0.0f, 0.0f), bone0);
 	osgAnimation::Bone* bone12 = createEndBone("bone12", osg::Vec3(1.0f, 0.0f, 0.0f), bone11);
 	osgAnimation::Bone* bone21 = createBone("bone21", osg::Vec3(-0.5f, 0.0f, 0.0f), bone0);

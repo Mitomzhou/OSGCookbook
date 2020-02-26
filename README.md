@@ -52,3 +52,17 @@
 * OSGCh05Ex08 创建一个战机游戏
 * OSGCh05Ex09 创建一个骨骼动画
 * OSGCh05Ex10 给骨骼蒙皮
+* OSGCh05Ex11 整合物理引擎
+
+[第6章详细内容 - 特效](/OSGCh06/README.md)
+* OSGCh06Ex01 实现 bump mapping 技术
+* OSGCh06Ex02 独立于视图的阴影
+* OSGCh06Ex03 osgFX 实现多 pass 渲染技术
+* OSGCh06Ex04 读取和显示 depth buffer 的内容
+* OSGCh06Ex05 实现夜视效果
+* OSGCh06Ex06 RTT实现景深效果
+* OSGCh06Ex07 立方体映射实现天空盒
+* OSGCh06Ex08 实现水特效
+* OSGCh06Ex09 实现云层
+
+[第9章详细内容 - 集成GUI](/OSGCh09/README.md)

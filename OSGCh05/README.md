@@ -112,3 +112,11 @@ parent->addChild( createBoneShape(trans, osg::Vec4(1.0f, 1.0f, 1.0f, 1.0f)) );
 * osg 提供了两个例子解释骨骼动画的使用 osganimationskinning 展示了如何构建一个简单的骨骼并进行蒙皮. osganimationhardware 则展示如何改变用于osgAnimation::RigGeometry 的变换技术
 * 记住, 不要通过代码构建一个完整的人类模型和骨骼动画, 这是一个很沉重的工作. 应当用常见的标准格式或者建模软件来实现, 例如 DAE 和 FBX 格式
 * OSG 支持 Collada DAE 和 Autodesk FBX 格式
+
+# OSGCh05Ex11
+* 使用 PhysX 物理库
+* 主要是根据ID建立一一的对应关系
+* 通过更新物理引擎来更新世界模型的相关矩阵
+* 将物理计算和渲染分开
+* 其他的物理引擎选择 ODE (http://www.ode.org/), Bullet Physics (http://bulletphysics.org/), Newton (http://newtondynamics.com/)
+* 使用的时候要分开物理对象和渲染对象, 避免混淆
