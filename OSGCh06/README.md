@@ -96,7 +96,7 @@ z = 2.0 * (10000 + 1.0) / (10000 + 1.0) - z *
     - 这是因为天空盒随眼睛而动, 其位置与边界很难计算(位置和边界可用于视图锥剔除).
     - osg::StateSet::setRenderBinDetails() --- 设置渲染次序.
 * osg::Texture::setResizeNonPowerOfTwoHint --- 当图像大小非2的幂次方, 是否改变其大小为2的幂次方.
-* computeLocalToWorldMatrix 方法
+* computeLocalToWorldMatrix 方法 --- 主要目的是将代表天空盒的球体移动到相机为中心的位置处.
     - 从 osgUtil::CullVisitor 对象获取相机的位置, 根据该位置设置天空盒的矩阵.
     - osg::NodeVisitor::getVisitorType() 判断访问者类型, 这里判断是否 osg::NodeVisitor::CULL_VISITOR, 因为剔除遍历会调用该函数.
     - 将 osg::NodeVisitor 转换为 osgUtil::CullVisitor
@@ -115,3 +115,39 @@ skybox->getOrCreateStateSet()->setTextureAttributeAndModes(
 * 本例主要实现一个反射场景的水面
 * 片段着色器至少要有两个输入纹理: 默认的水纹理, 反射 map, 折射 map, 用于光照的法线 map.
 * 研究海洋 http://code.google.com/p/osgocean/.
+* 默认的 uniform 变量 osg_FrameTime
+* 使用 clip 坐标计算出新的纹理坐标, 这样就无需重新设置相机
+* 本例使用噪值纹理简化生成波形的代码(可以构造网格几何数据来仿真波形). 本例将光线方向和视觉方向变换至切线空间进行计算.
+* osgOcean 项目
+
+# OSGCh06Ex09
+* 仿真云
+* 从 osg::Drawable 派生而来, 最重要的方法是实现 computeBound() 和 drawImplementation()
+* 每个云都有其位置, 亮度, 颜色值.
+* 使用仿函数排序所有云层
+* osg::RenderInfo::getState 获取 osg::State
+* osg::State::getModelViewMatrix() 可以获取模型视图矩阵
+* osg 的矩阵是以行存储的方式存储矩阵, 通过右乘得到变换后的矩阵位置
+```
+(v0 v1 v2 v3) *
+|m00 m01 m02 m03|
+|m10 m11 m12 m13|
+|m20 m21 m22 m23|
+|m30 m31 m32 m33|
+
+nv1 = v0 * m00 + v1 * m10 + v2 * m20 + v3 * m30
+nv2 = v0 * m01 + v1 * m11 + v2 * m21 + v3 * m31
+nv3 = v0 * m02 + v1 * m12 + v2 * m22 + v3 * m32
+```
+* 所以本例要算出新的深度值 v0 * matrix(0, 2) + v1 * matrix(1, 2) + v2 * matrix(2, 2) + v3 * matrix(3, 2);
+    - 又因为深度值在最后的视觉矩阵中, 越往后深度值越大, 因此本例要将上面的值取反
+    - 视觉坐标系 z 轴正值在相机后方. 负值在相机前方.
+* 书本的解释是当前云的位置和相机的front(前向)向量的点乘结果作为深度值. 这里的前向向量为相机的方向.
+* 用一个矩阵变换一个向量
+* osg::BoudingBox::expandby 设置一个围绕盒
+* osg::Matrix::transform3x3 通过矩阵变换一个向量
+    - 这是左乘矩阵
+
+# OSGCh06Ex10
+* 自定义状态属性
+* 演示 osg::StateAttribute 派生类的使用.

@@ -1,4 +1,5 @@
 *project/
 *build/
 *.vs/
+*data/
 .gitignore

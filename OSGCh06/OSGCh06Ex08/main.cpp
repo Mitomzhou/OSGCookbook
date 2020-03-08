@@ -34,6 +34,9 @@ static const char* waterVert = {
 
 	"void main()\n"
 	"{\n"
+	"	// T --- 切线 Y轴 \n"
+	"	// N --- 法线 Z轴 \n"
+	"	// B --- 副法线 X轴 \n"
 	"   vec3 T = vec3(0.0, 1.0, 0.0);\n"
 	"   vec3 N = vec3(0.0, 0.0, 1.0);\n"
 	"   vec3 B = vec3(1.0, 0.0, 0.0);\n"
@@ -41,6 +44,7 @@ static const char* waterVert = {
 	"   B = normalize(gl_NormalMatrix * B);\n"
 	"   N = normalize(gl_NormalMatrix * N);\n"
 
+	"	// 建立切线空间的逆矩阵, 世界空间的光线可以转换至切线空间. \n"
 	"   mat3 TBNmat;\n"
 	"   TBNmat[0][0] = T[0]; TBNmat[1][0] = T[1]; TBNmat[2][0] = T[2];\n"
 	"   TBNmat[0][1] = B[0]; TBNmat[1][1] = B[1]; TBNmat[2][1] = B[2];\n"
@@ -48,7 +52,9 @@ static const char* waterVert = {
 
 	"   vec3 vertexInEye = vec3(gl_ModelViewMatrix * gl_Vertex);\n"
 	"   lightDir =  gl_LightSource[0].position.xyz - vertexInEye;\n"
+	"	// 切线空间的光线方向 \n"
 	"   lightDir = normalize(TBNmat * lightDir);\n"
+	"	// 切线空间的视觉方向 \n"
 	"   eyeDir = normalize(TBNmat * (-vertexInEye));\n"
 
 	"   vec2 t1 = vec2(osg_FrameTime*0.02, osg_FrameTime*0.02);\n"
@@ -63,21 +69,23 @@ static const char* waterVert = {
 };
 
 static const char* waterFrag = {
-	"uniform sampler2D defaultTex;\n"
-	"uniform sampler2D reflection;\n"
-	"uniform sampler2D refraction;\n"
-	"uniform sampler2D normalTex;\n"
+	"uniform sampler2D defaultTex; // 天空纹理 \n"
+	"uniform sampler2D reflection; // 场景反射内容 \n"
+	"uniform sampler2D refraction; // 水面折射纹理 \n"
+	"uniform sampler2D normalTex; // 法线纹理 \n"
 	"varying vec4 projCoords;\n"
 	"varying vec3 lightDir, eyeDir;\n"
 	"varying vec2 flowCoords, rippleCoords;\n"
 
 	"void main()\n"
 	"{\n"
+	"	// 折射纹理数据\n"
 	"   vec2 rippleEffect = 0.02 * texture2D(refraction, rippleCoords * 0.1).xy;\n"
+	"	// 获取法线 \n"
 	"   vec4 N = texture2D(normalTex, flowCoords + rippleEffect);\n"
 	"   N = N * 2.0 - vec4(1.0);\n"
 	"   N.a = 1.0; N = normalize(N);\n"
-
+	"	// 计算反射向量, 计算高亮 \n"
 	"   vec3 refVec = normalize(reflect(-lightDir, vec3(N) * 0.6));\n"
 	"   float refAngle = clamp(dot(eyeDir, refVec), 0.0, 1.0);\n"
 	"   vec4 specular = vec4(pow(refAngle, 40.0));\n"
@@ -86,7 +94,7 @@ static const char* waterFrag = {
 	"   dist = (dist * 2.0 - vec2(1.0)) * 0.1;\n"
 	"   vec2 uv = projCoords.xy / projCoords.w;\n"
 	"   uv = clamp((uv + 1.0) * 0.5 + dist, 0.0, 1.0);\n"
-
+	"	// 混合天空和反射场景 \n"
 	"   vec4 base = texture2D(defaultTex, uv);\n"
 	"   vec4 refl = texture2D(reflection, uv);\n"
 	"   gl_FragColor = mix(base, refl + specular, 0.6);\n"
@@ -117,7 +125,7 @@ int main(int argc, char** argv)
 		osg::Matrix::scale(1.0f, 1.0f, -1.0f) *
 		osg::Matrix::translate(0.0f, 0.0f, z));
 	reverse->addChild(scene.get());
-
+	
 	osg::ref_ptr<osg::ClipPlane> clipPlane = new osg::ClipPlane;
 	clipPlane->setClipPlane(0.0, 0.0, -1.0, z);
 	clipPlane->setClipPlaneNum(0);
@@ -131,6 +139,7 @@ int main(int argc, char** argv)
 	tex2D->setTextureSize(1024, 1024);
 	tex2D->setInternalFormat(GL_RGBA);
 
+	// rtt 相机的内容应该和主相机看到的一样, 只是只有 clipNode 的内容.
 	osg::ref_ptr<osg::Camera> rttCamera = osgCookBook::createRTTCamera(osg::Camera::COLOR_BUFFER, tex2D.get());
 	rttCamera->addChild(clipNode.get());
 
@@ -158,7 +167,7 @@ int main(int argc, char** argv)
 	geode->getOrCreateStateSet()->addUniform(new osg::Uniform("defaultTex", 1));
 	geode->getOrCreateStateSet()->addUniform(new osg::Uniform("refraction", 2));
 	geode->getOrCreateStateSet()->addUniform(new osg::Uniform("normalTex", 3));
-
+	
 	// Build the scene graph
 	osg::ref_ptr<osg::Group> root = new osg::Group;
 	root->addChild(rttCamera.get());
@@ -167,6 +176,9 @@ int main(int argc, char** argv)
 
 	osgViewer::Viewer viewer;
 	viewer.setUpViewInWindow(50, 50, 800, 600);
+	viewer.setCameraManipulator(new osgGA::TrackballManipulator);
+	viewer.getCameraManipulator()->setHomePosition(osg::Vec3d(0.0, -100.0, 0.0),
+		osg::Vec3d(0.0, 0.0, 0.0), osg::Vec3d(0.0, 0.0, 1.0));
 	viewer.setSceneData(root.get());
 	return viewer.run();
 }

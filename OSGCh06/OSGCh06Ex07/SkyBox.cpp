@@ -42,6 +42,7 @@ void SkyBox::setEnvironmentMap( unsigned int unit, osg::Image* posX, osg::Image*
     }
 }
 
+// 将球体移动到相机为中心的位置处.
 bool SkyBox::computeLocalToWorldMatrix( osg::Matrix& matrix, osg::NodeVisitor* nv ) const
 {
     if ( nv && nv->getVisitorType()==osg::NodeVisitor::CULL_VISITOR )

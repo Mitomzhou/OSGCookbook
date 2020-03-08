@@ -61,6 +61,21 @@
 # OSGCh02Ex10
 * 指南针
 * osg::WGS_84_RADIUS_POLAR: WGS84 的地球半径大小
-* osg::Camera
+* 地球通过绘地球半径大小的球体实现
+* osg::Camera, 使用相机绘制指南针 HUD
 	- 可重写函数 void traverse()
 * 根据相机计算出北极向量
+
+# OSGCh02Ex11
+* 使用 CG
+* 下载 CG
+	- http://developer.nvidia.com/cg-toolkit
+* CMake
+```
+FIND_PATH(CG_INCLUDE_PATH Cg/cg.h)
+FIND_LIBRARY(CG_GL_LIBRARY CgGL)
+FIND_LIBRARY(CG_LIBRARY Cg)
+INCLUDE_DIRECTORIES(${CG_INCLUDE_PATH })
+TARGET_LINK_LIBRARIES(${EXAMPLE_NAME}
+  ${CG_LIBRARY} ${CG_GL_LIBRARY})
+```

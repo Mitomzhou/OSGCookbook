@@ -7,11 +7,14 @@
 #include <osg/ShapeDrawable>
 #include <osg/BlendFunc>
 #include <osg/Depth>
+#include <osg/Image>
 
 #include <osgUtil/Optimizer>
 
 #include <osgDB/Registry>
 #include <osgDB/ReadFile>
+#include <osgDB/WriteFile>
+
 
 #include <osgGA/TrackballManipulator>
 #include <osgGA/FlightManipulator>
