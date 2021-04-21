@@ -145,3 +145,40 @@ status : [pending/completed]
 
 # OSGCh07Ex06
 * NVIDA Texture Tools(NVTT), 开源的图像处理和纹理操作项目.
+
+# OSGCh07Ex07
+* 使用 SSH 实现群集生成
+
+# OSGCh07Ex08
+* 从网络下载和渲染地形
+* 由于依赖于 cURL 库的 osgdb_curl 插件, OSG 可以快速从远程服务器通过多个协议读取文件.
+* OSG 同样提供一个简单的 file-cache 机制, 该机制写入临时文件, 从网络读取文件至本地硬盘, 当相同的传输请求再次到来时可以直接加载硬盘文件. 该机制目前只用于分页的节点, 该节点由 osgDB::DatabasePager 类动态管理(根据当前的视点加载和移除). 这样的解决方案避免用户应用重复访问和下载远程网站不变的数据, 这样可以节省带宽和加载时间.
+* 创建一个包含地形数据的服务器, 可以给匿名访问者访问权限, 可以用 AppServ ((http://www.appservnetwork.com/) 实现这样的网站.
+* 本地演示
+```
+# osgviewer http://127.0.0.1/output/out.osgb
+```
+* 实际的例子
+```
+# osgviewer http://www.openscenegraph.org/data/
+  earth_bayarea/earth.ive
+```
+* 使用文件cache机制, 通过环境变量实现
+```
+# export OSG_FILE_CACHE = /home/cache
+# mkdir /home/cache
+```
+* osgDB::FileLocationCallback 对象可以决定一个文件是否应该被 cached. 该对象有两个重写的方法
+```
+virtual Location fileLocation(const std::string& filename, const Options* options);
+virtual bool useFileCache() const;
+```
+  - 第一个方法判断文件是本地还是远程的.
+  - 第二个方法用于快速允许和禁止 caching 的使用.
+* setFileLocationCallback() 方法设置你自己的位置回调.
+```
+osg::ref_ptr<osgDB::Options> options = new osgDB::Options;
+options->setFileLocationCallback( ownCallback );
+pagedNode->setDatabaseOptions( options.get() );
+```
+* 地形数据库的版本控制, 见 osgdatabaserevisions 例子的代码

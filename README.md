@@ -71,5 +71,12 @@
 * OSGCh07Ex03 生成地球上的地形数据
 * OSGCh07Ex04 使用多个图像和高度数据
 * OSGCh07Ex05 在已有的地形数据库上更新数据
+* OSGCh07Ex06 NVIDA Texture Tools(NVTT), 开源的图像处理和纹理操作项目
+* OSGCh07Ex07 使用 SSH 实现群集生成
+* OSGCh07Ex08 从网络下载和渲染地形
+
+[第8章详细内容 - 管理数据](/OSGCh08/README.md)
+* OSGCh08Ex01 合并几何体
+* OSGCh08Ex02 压缩纹理
 
 [第9章详细内容 - 集成GUI](/OSGCh09/README.md)

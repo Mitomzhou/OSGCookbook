@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.6)
-set(ProjName OSGCh02Ex11)
+set(ProjName Example)
 set(UtilFile ../common/common.cpp ../common/PickHandler.cpp)
 project(${ProjName})
 
@@ -11,9 +11,6 @@ find_package(osgViewer)
 find_package(osgGA)
 find_package(osgAnimation)
 find_package(osgText)
-FIND_PATH(CG_INCLUDE_PATH Cg/cg.h)
-FIND_LIBRARY(CG_GL_LIBRARY CgGL)
-FIND_LIBRARY(CG_LIBRARY Cg)
 
 macro(config_project PROJNAME LIBNAME)
 	include_directories( ${${LIBNAME}_INCLUDE_DIR} )
